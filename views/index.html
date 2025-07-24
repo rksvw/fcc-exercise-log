@@ -15,7 +15,7 @@
       <input type="text" name="username" id="username" placeholder="username" />
       <button type="submit">Submit</button>
     </form>
-    <form action="" class="add-exercises">
+    <form action="" id="add-exercises">
       <h2>Add exercises</h2>
       <p><code>POST /api/users/:_id/exercises</code></p>
       <input type="text" name="_id" id="_id" placeholder=":_id" />
@@ -42,15 +42,21 @@
     <!-- </div> -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const form = document.querySelector("#new-user");
-        const input = document.querySelector("#username");
+        const userForm = document.querySelector("#new-user");
+        const userInput = document.querySelector("#username");
 
-        form.addEventListener("submit", async (e) => {
+        const exerciseForm = document.querySelector("#add-exercises");
+        const userId = document.querySelector("#_id");
+        const description = document.querySelector("#description");
+        const duration = document.querySelector("#duration");
+        const date = document.querySelector("#date");
+
+        userForm.addEventListener("submit", async (e) => {
           e.preventDefault();
 
-          const inputValues = input.value;
+          const inputValues = userInput.value;
 
-          res = await fetch("http://localhost:3000/api/users", {
+          const res = await fetch("http://localhost:3000/api/users", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -65,6 +71,39 @@
           const data = await res.json();
 
           window.location.href = `/api/users`;
+        });
+
+        exerciseForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const id = userId.value;
+          const des = description.value;
+          const dur = duration.value;
+          const time = date.value;
+
+          const res = await fetch(
+            `http://localhost:3000/api/users/${id}/exercises`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                id: id,
+                description: des,
+                duration: dur,
+                date: time,
+              }),
+            }
+          );
+
+          if (!res.ok) {
+            alert("Error Occured!");
+          }
+
+          const data = await res.json();
+          console.log(data);
+          window.location.href = `/api/users/${id}/logs`;
         });
       });
     </script>
