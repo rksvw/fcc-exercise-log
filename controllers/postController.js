@@ -3,20 +3,37 @@ const User = require("../models/userModel");
 const Exercise = require("../models/exerciseModel");
 
 async function createUser(req, res) {
-  const uname = req.body.inputValues;
+  try {
+    const { username } = req.body;
 
-  const newUser = new User({
-    username: uname,
-  });
+    const reqUser = await User.findOne({ username });
 
-  const userDoc = await newUser.save();
+    console.log(reqUser);
+    if (isNaN(reqUser)) {
+      app.locals.userId = reqUser._id;
 
-  app.locals.userId = userDoc._id;
+      res.json({
+        username: reqUser.username,
+        _id: reqUser._id,
+      });
+    } else {
+      const newUser = new User({
+        username,
+      });
 
-  res.send({
-    _id: userDoc._id,
-    username: userDoc.username,
-  });
+      const userDoc = await newUser.save();
+
+      app.locals.userId = userDoc._id;
+
+      res.json({
+        username: userDoc.username,
+        _id: userDoc._id,
+      });
+    }
+  } catch (err) {
+    console.error("Server Error");
+    throw new Error("Server Side Error");
+  }
 }
 
 async function addExercise(req, res) {

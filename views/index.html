@@ -42,33 +42,48 @@
     <!-- </div> -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
+        // Connected to user form
         const userForm = document.querySelector("#new-user");
         const userInput = document.querySelector("#username");
 
+        // Connected to exercise form
         const exerciseForm = document.querySelector("#add-exercises");
         const userId = document.querySelector("#_id");
         const description = document.querySelector("#description");
         const duration = document.querySelector("#duration");
         const date = document.querySelector("#date");
 
+        // Event listener for user-form
         userForm.addEventListener("submit", async (e) => {
+          // Default set - data not get erased
           e.preventDefault();
 
+          // Original inputs data form form
           const inputValues = userInput.value;
 
-          const res = await fetch("http://localhost:3000/api/users", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: await JSON.stringify({ inputValues }),
-          });
+          // Created the form - to store data as form
+          try {
+            const formData = new FormData();
+            formData.append("username", inputValues);
 
-          if (!res.ok) {
-            alert("Error Occured!");
+            // Form data Looks like
+            console.log("Form Data", formData);
+
+            const res = await fetch("http://localhost:3000/api/users", {
+              method: "POST",
+              body: formData,
+            });
+
+            if (!res.ok) {
+              alert("Error Occured!");
+            }
+
+            const data = await res.json();
+            console.log(data);
+          } catch (err) {
+            console.log("Client side error", err.message);
+            throw new Error("Error Cliect Side", err.message);
           }
-
-          const data = await res.json();
 
           window.location.href = `/api/users`;
         });

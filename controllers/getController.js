@@ -3,9 +3,24 @@ const Exercise = require("../models/exerciseModel");
 const { app } = require("../app");
 
 async function showUser(req, res) {
-  const id = app.locals.userId;
-  const currentUser = await User.findById(id);
-  res.json({ _id: currentUser._id, username: currentUser.username });
+  try {
+    const id = app.locals.userId;
+    if (!id) {
+      const users = await User.find({});
+      console.log(Object(users));
+      res.send(users);
+    }
+    console.log(id);
+    const currentUser = await User.findById(id);
+    app.locals.userId = undefined;
+    res.json({
+      username: currentUser.username,
+      _id: currentUser._id,
+    });
+  } catch (err) {
+    console.error("Server Error: ", err.message);
+    throw new Error(`Server Error 505`, err.message);
+  }
 }
 
 async function showExerciseLogs(req, res) {
