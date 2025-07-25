@@ -96,19 +96,17 @@
           const dur = duration.value;
           const time = date.value;
 
+          const formData = new FormData();
+
+          formData.append("description", des);
+          formData.append("duration", dur);
+          formData.append("date", time);
+
           const res = await fetch(
             `http://localhost:3000/api/users/${id}/exercises`,
             {
               method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                id: id,
-                description: des,
-                duration: dur,
-                date: time,
-              }),
+              body: formData,
             }
           );
 

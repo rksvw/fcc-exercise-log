@@ -7,7 +7,7 @@ async function showUser(req, res) {
     const id = app.locals.userId;
     if (!id) {
       const users = await User.find({});
-      console.log(Object(users));
+      // console.log(Object(users));
       res.send(users);
     }
     console.log(id);
@@ -33,13 +33,10 @@ async function showExerciseLogs(req, res) {
 
   if (!exeId) return res.status(404).json({ error: "Exercise not found" });
 
-  console.log(exercise);
-  console.log(user);
-
-  res.json({
+  res.send({
     _id: user._id,
     username: user.username,
-    date: new Date(exercise.date).toUTCString(),
+    date: exercise.date.toDateString(),
     duration: exercise.duration,
     description: exercise.description,
   });

@@ -10,6 +10,7 @@ const PORT = 3000;
 app.use(bodyParser.urlencoded({ extended: true }));
 console.log("Connected to body parser");
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({ optionsSuccessStatus: 200 }));
 console.log("Connected to proxy server test cases");
